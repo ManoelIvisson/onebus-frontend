@@ -1,0 +1,58 @@
+.mainCard :global(.card-header) {
+    background-color: var(--white);
+    padding: 16px 24px;
+    border-bottom: 1px solid #f0f2f5;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: var(--dark-text);
+}
+
+.tableWrapper {
+    overflow-x: auto;
+}
+
+.vehicleTable {
+    margin-bottom: 0;
+    vertical-align: middle;
+}
+
+.vehicleTable th {
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    color: var(--medium-gray);
+    background-color: #f8f9fa;
+    padding: 12px 24px;
+    border: none;
+}
+
+.vehicleTable td {
+    padding: 16px 24px;
+    font-size: 0.95rem;
+    color: var(--dark-gray);
+}
+
+.vehicleTable tbody tr {
+    transition: background-color 0.2s ease;
+    cursor: pointer;
+    /* Adicionado para indicar que a linha é clicável */
+}
+
+.vehicleTable tbody tr:hover {
+    background-color: #f5f8fc;
+}
+
+.selectedRow {
+    background-color: #FFFBEB !important;
+    --bs-table-accent-bg: #FFFBEB !important;
+}
+
+.vehicleName {
+    color: var(--medium-gray);
+}
+
+.statusBadge {
+    font-size: 0.75rem;
+    padding: 6px 12px;
+    font-weight: 500;
+}

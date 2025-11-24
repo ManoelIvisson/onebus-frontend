@@ -1,0 +1,67 @@
+/* --- Grid de Estatísticas --- */
+.statsGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    /* Duas colunas */
+    gap: 16px;
+}
+
+/* --- Card de Estatística --- */
+.statCard {
+    background-color: var(--white);
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.3s ease;
+}
+
+.statCard:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+}
+
+.statIconWrapper {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.statIcon {
+    font-size: 1.1rem;
+    color: var(--white);
+}
+
+.statInfo {
+    display: flex;
+    flex-direction: column;
+}
+
+.statTitle {
+    text-transform: uppercase;
+    font-weight: 600;
+    font-size: 0.75rem;
+    color: var(--medium-gray);
+    margin-bottom: 2px;
+}
+
+.statValue {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--dark-text);
+    line-height: 1;
+}
+
+/* Cores dos Ícones */
+.total .statIconWrapper {
+    background-color: var(--blue);
+}
+
+.online .statIconWrapper {
+    background-color: var(--green);
+}
