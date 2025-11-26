@@ -1,7 +1,7 @@
 import axios from "axios";
 import type { LatLng } from "leaflet";
 import { useEffect, useState } from "react";
-import { MapContainer, Marker, Polyline, Popup, TileLayer, useMapEvents } from "react-leaflet";
+import { MapContainer, Marker, TileLayer, useMapEvents } from "react-leaflet";
 
 function EventosMapa({ onClickMap }: {onClickMap: (coordenadas: LatLng) => void}) {
   useMapEvents({

@@ -1,4 +1,4 @@
-import { Doughnut } from "react-chartjs-2";
+//import { Doughnut } from "react-chartjs-2";
 import CardStatus from "../components/CardStatus";
 import MapaVeiculos from "../components/MapaVeiculos";
 //import styles from '../components/CardStatus.module.css'
@@ -6,55 +6,48 @@ import styles from './Dashboard.module.css'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { useEffect, useState } from "react";
 import axios from "axios";
+import type { Veiculo } from "../types/veiculo";
 
-// Registrando os componentes necessários para o Chart.js
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const mockVehicles = [
-  { id: 'ONB-001', name: 'Ônibus 01', driver: 'Carlos Silva', status: 'Em Rota', position: [-6.255, -36.520] },
-  { id: 'ONB-002', name: 'Ônibus 02', driver: 'Ana Souza', status: 'Parado', position: [-6.265, -36.535] },
-  { id: 'ONB-003', name: 'Ônibus 03', driver: 'João Pereira', status: 'Em Rota', position: [-6.260, -36.515] },
-  { id: 'ONB-004', name: 'Van 01', driver: 'Maria Costa', status: 'Offline', position: [-6.270, -36.540] },
-];
-
 function Dashboard() {
-  const [veiculoSelecionado, setVeiculoSelecionado] = useState(undefined);
+  const [veiculoSelecionado] = useState<Veiculo | undefined>(undefined);
   const [veiculos, setVeiculos] = useState([]); 
 
-  const onlineVehicles = mockVehicles.filter(v => v.status !== 'Offline');
-  const statusCounts = mockVehicles.reduce((acc: any, vehicle) => {
-    acc[vehicle.status] = (acc[vehicle.status] || 0) + 1;
-    return acc;
-  }, {});
+  //const onlineVehicles = veiculos.filter(v => v.status !== 'Offline');
+  //const statusCounts = veiculos.reduce((acc: any, vehicle) => {
+  //  acc[vehicle.status] = (acc[vehicle.status] || 0) + 1;
+  //  return acc;
+  //}, {});
 
-  const chartData = {
-    labels: ['Em Rota', 'Parado', 'Offline'],
-    datasets: [{
-      label: 'Status da Frota',
-      data: [statusCounts['Em Rota'] || 0, statusCounts['Parado'] || 0, statusCounts['Offline'] || 0],
-      backgroundColor: ['#106F4C', '#636A73', '#d0d4da'],
-      borderColor: '#FFFFFF',
-      borderWidth: 3,
-      hoverOffset: 4,
-    }],
-  };
+  //const chartData = {
+  //  labels: ['Em Rota', 'Parado', 'Offline'],
+  //  datasets: [{
+  //    label: 'Status da Frota',
+  //    //data: [statusCounts['Em Rota'] || 0, statusCounts['Parado'] || 0, statusCounts['Offline'] || 0],
+  //    backgroundColor: ['#106F4C', '#636A73', '#d0d4da'],
+  //    borderColor: '#FFFFFF',
+  //    borderWidth: 3,
+  //    hoverOffset: 4,
+  //  }],
+  //};
 
-  const chartOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    cutout: '70%',
-    plugins: {
-      legend: {
-        display: true,
-        position: 'bottom',
-        labels: { padding: 20, usePointStyle: true, pointStyle: 'circle' },
-      },
-    },
-  };
+  //const chartOptions = {
+  //  responsive: true,
+  //  maintainAspectRatio: false,
+  //  cutout: '70%',
+  //  plugins: {
+  //    legend: {
+  //      display: true,
+  //      position: 'bottom',
+  //      labels: { padding: 20, usePointStyle: true, pointStyle: 'circle' },
+  //    },
+  //  },
+  //};
 
-  const handleVehicleSelect = (veiculo: any) => {
-    setVeiculoSelecionado(veiculo);
-  }
+  //const handleVehicleSelect = (veiculo: any) => {
+  //  setVeiculoSelecionado(veiculo);
+  //}
 
   useEffect(() => {
     async function getVeiculosComPosicao() {
@@ -98,7 +91,7 @@ function Dashboard() {
                   Status dos veículos
                 </div>
                 <div className="card-body">
-                  <Doughnut data={chartData} options={chartOptions} />
+                  {/*<Doughnut data={chartData} options={chartOptions} />*/}
                 </div>
               </div>
             </div>
@@ -121,7 +114,7 @@ function Dashboard() {
                     </tr>
                   </thead>
                   <tbody>
-                    {onlineVehicles.map(v => (
+                    {/*{onlineVehicles.map(v => (
                       <tr
                         key={v.id}
                         onClick={() => handleVehicleSelect(v)}
@@ -135,7 +128,7 @@ function Dashboard() {
                           </div>
                         </td>
                       </tr>
-                    ))}
+                    ))}*/}
                   </tbody>
                 </div>
               </div>
