@@ -5,53 +5,24 @@ import MapaVeiculos from "../components/MapaVeiculos";
 import styles from './Dashboard.module.css'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { useEffect, useState } from "react";
-import axios from "axios";
 import type { Veiculo } from "../types/veiculo";
+import api from "../api/api";
+import GraficoDoughnut from "../components/GraficoDoughnut";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 function Dashboard() {
-  const [veiculoSelecionado] = useState<Veiculo | undefined>(undefined);
-  const [veiculos, setVeiculos] = useState([]); 
+  const [veiculoSelecionado, setVeiculoSelecionado] = useState<Veiculo | undefined>(undefined);
+  const [veiculos, setVeiculos] = useState<Veiculo[]>([]); 
+  const [veiculosAtivos, setVeiculosAtivos] = useState<Veiculo[]>([]);
 
-  //const onlineVehicles = veiculos.filter(v => v.status !== 'Offline');
-  //const statusCounts = veiculos.reduce((acc: any, vehicle) => {
-  //  acc[vehicle.status] = (acc[vehicle.status] || 0) + 1;
-  //  return acc;
-  //}, {});
-
-  //const chartData = {
-  //  labels: ['Em Rota', 'Parado', 'Offline'],
-  //  datasets: [{
-  //    label: 'Status da Frota',
-  //    //data: [statusCounts['Em Rota'] || 0, statusCounts['Parado'] || 0, statusCounts['Offline'] || 0],
-  //    backgroundColor: ['#106F4C', '#636A73', '#d0d4da'],
-  //    borderColor: '#FFFFFF',
-  //    borderWidth: 3,
-  //    hoverOffset: 4,
-  //  }],
-  //};
-
-  //const chartOptions = {
-  //  responsive: true,
-  //  maintainAspectRatio: false,
-  //  cutout: '70%',
-  //  plugins: {
-  //    legend: {
-  //      display: true,
-  //      position: 'bottom',
-  //      labels: { padding: 20, usePointStyle: true, pointStyle: 'circle' },
-  //    },
-  //  },
-  //};
-
-  //const handleVehicleSelect = (veiculo: any) => {
-  //  setVeiculoSelecionado(veiculo);
-  //}
+  const handleVehicleSelect = (veiculo: any) => {
+    setVeiculoSelecionado(veiculo);
+  }
 
   useEffect(() => {
     async function getVeiculosComPosicao() {
-      const response = await axios.get('https://onebus-backend.onrender.com/veiculo/get-all/coord-atual');
+      const response = await api.get('/veiculo/get-all/coord-atual');
       const veiculos = response.data.data;
 
       if (veiculos.length > 0) {
@@ -65,6 +36,11 @@ function Dashboard() {
       clearInterval(interval);
     }
   }, [])
+
+  useEffect(() => {
+    setVeiculosAtivos(veiculos.filter(v => v.status == 'ativo'));
+    console.log(veiculos)
+  }, [veiculos])
 
   return (
     <div className="p-4">
@@ -83,15 +59,15 @@ function Dashboard() {
           <div className="col-lg-4">
             <div className="h-100 d-flex-flex-column">
               <div className="row gap-2 flex-row justify-content-between">
-                <CardStatus icone="fa-bus-side" titulo="Frota Total" valor={0} cor="total"/>
-                <CardStatus icone="fa-satellite-dish" titulo="Ativos" valor={0} cor="online"/>
+                <CardStatus icone="fa-bus-side" titulo="Frota Total" valor={veiculos.length} cor="total"/>
+                <CardStatus icone="fa-satellite-dish" titulo="Ativos" valor={veiculosAtivos.length} cor="online"/>
               </div>
               <div className={`card ${styles.mainCard} mt-4 flex-grow-1 d-flex flex-column`}>
                 <div className="card-header">
                   Status dos veículos
                 </div>
                 <div className="card-body">
-                  {/*<Doughnut data={chartData} options={chartOptions} />*/}
+                  <GraficoDoughnut veiculos={veiculos} />
                 </div>
               </div>
             </div>
@@ -104,8 +80,8 @@ function Dashboard() {
               <div className="card-header">
                 Veículos Ativos
               </div>
-              <div className="card-body">
-                <div className="table table-responsive">
+              <div className={`card-body ${styles.tableWrapper}`}>
+                <div className={`table table-responsive ${styles.vehicleTable}`}>
                   <thead>
                     <tr>
                       <th>Veículo</th>
@@ -114,21 +90,21 @@ function Dashboard() {
                     </tr>
                   </thead>
                   <tbody>
-                    {/*{onlineVehicles.map(v => (
+                    {veiculosAtivos.map(v => (
                       <tr
                         key={v.id}
                         onClick={() => handleVehicleSelect(v)}
                         className={veiculoSelecionado?.id === v.id ? styles.selectedRow : ''}
                       >
-                        <td><b>{v.id}</b><br /><small className={styles.vehicleName}>{v.name}</small></td>
-                        <td>{v.driver}</td>
+                        <td><b>{v.id}</b><br /><small className={styles.vehicleName}>{v.modelo}</small></td>
+                        {/*<td>{v.driver}</td>*/}
                         <td>
                           <div className={`${styles.statusBadge} bg-${v.status === 'Em Rota' ? 'success' : 'secondary'} rounded-pill`}>
                             {v.status}
                           </div>
                         </td>
                       </tr>
-                    ))}*/}
+                    ))}
                   </tbody>
                 </div>
               </div>
