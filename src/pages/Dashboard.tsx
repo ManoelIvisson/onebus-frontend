@@ -17,6 +17,7 @@ function Dashboard() {
   const [veiculosAtivos, setVeiculosAtivos] = useState<Veiculo[]>([]);
 
   const handleVehicleSelect = (veiculo: any) => {
+    veiculo.position = [veiculo.coordenada_atual.latitude, veiculo.coordenada_atual.longitude]
     setVeiculoSelecionado(veiculo);
   }
 

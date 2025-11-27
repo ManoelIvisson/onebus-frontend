@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L, { type LatLngExpression } from 'leaflet'; 
+import type { Veiculo } from '../types/veiculo';
 
 function MudarVisaoMapa({ centro, zoom }: {centro: LatLngExpression | null, zoom: number}) {
     const mapa = useMap();
@@ -43,7 +44,7 @@ const iconeFinal = new L.Icon({
 });
 
 
-function MapaVeiculos({ veiculos, veiculoSelecionado }: {veiculos: any, veiculoSelecionado: any}) {
+function MapaVeiculos({ veiculos, veiculoSelecionado }: {veiculos: any, veiculoSelecionado: Veiculo | undefined}) {
     // Posição inicial do mapa (Centro de Currais Novos, RN)
     const posicaoInicial: LatLngExpression = [-6.2605, -36.52];
     const [centroMapa, setCentroMapa] = useState<LatLngExpression | null>(null);
