@@ -44,11 +44,11 @@ function MainLayout() {
             </div>
             <span className={styles.menuText}>Rotas</span>
           </NavLink>
-          <NavLink to="/motoristas" className={({ isActive }) => `${styles.navLink} ${isActive ? styles.active : ''}`}>
+          <NavLink to="/frotas" className={({ isActive }) => `${styles.navLink} ${isActive ? styles.active : ''}`}>
             <div className={styles.menuIcon}>
-              <i className='fas fa-users'></i>
+              <i className='fas fa-bus-side'></i>
             </div>
-            <span className={styles.menuText}>Motoristas</span>
+            <span className={styles.menuText}>Frotas</span>
           </NavLink>
           <NavLink to="/relatorios" className={({ isActive }) => `${styles.navLink} ${isActive ? styles.active : ''}`}>
             <div className={styles.menuIcon}>

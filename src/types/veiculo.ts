@@ -4,5 +4,5 @@ export interface Veiculo {
   tipo: string,
   placa: string,
   status: string,
-  position: [number, number]
+  position: [number, number] | null
 }

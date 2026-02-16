@@ -65,3 +65,7 @@
 .online .statIconWrapper {
     background-color: var(--green);
 }
+
+.vehicles .statIconWrapper { 
+    background-color: #ffc107; 
+}
