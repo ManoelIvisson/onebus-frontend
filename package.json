@@ -17,6 +17,7 @@
     "axios": "^1.13.2",
     "bootstrap": "^5.3.8",
     "chart.js": "^4.5.1",
+    "humps": "^2.0.1",
     "leaflet": "^1.9.4",
     "react": "^19.2.0",
     "react-bootstrap": "^2.10.10",
@@ -27,6 +28,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
+    "@types/humps": "^2.0.6",
     "@types/leaflet": "^1.9.21",
     "@types/node": "^24.10.0",
     "@types/react": "^19.2.2",

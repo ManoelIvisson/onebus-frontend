@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Container, Row, Col, Card, Table, Button, Badge, Form, Modal, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { Container, Row, Col, Card, Table, Button, Badge, Form, Modal, OverlayTrigger, Tooltip, type FormControlProps } from 'react-bootstrap';
 import { faTruck, faSearch, faEdit, faTrashAlt, faPlus, faCircleCheck, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 
 import styles from './Frotas.module.css';
 import CardStatus from '../components/CardStatus';
 import type { Motorista } from '../types/motorista';
 import { useMotoristas } from '../hooks/useMotoristas';
+import { putMotoristaService } from '../services/motoristaService';
 
 const mockVehicles = [
   { plate: 'ONB-001', name: 'Ônibus 01', type: 'Ônibus', driverId: 1, status: 'Em Rota' },
@@ -18,23 +19,27 @@ const mockVehicles = [
 
 function Frotas() {
   //const activeDrivers = mockDrivers.filter(d => d.status === 'Ativo').length;
-
-  const [showNewModal, setShowNewModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [showNewVehicleModal, setShowNewVehicleModal] = useState(false);
-  const [selectedDriver, setSelectedDriver] = useState<Motorista | null>(null);
-  const [novoMotorista, setNovoMotorista] = useState<Motorista>({
+  const initialMotorista: Motorista = {
     id: 0,
     nomeCompleto: "",
     cnh: "",
     cpf: "",
     senha: "",
     status: "ativo"
-  });
-  const { motoristas, loading, error, refresh, createMotorista } = useMotoristas();
+  };
 
-  const handleShowNewModal = () => setShowNewModal(true);
+  const [showNewModal, setShowNewModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showNewVehicleModal, setShowNewVehicleModal] = useState(false);
+  const [selectedDriver, setSelectedDriver] = useState<Motorista | null>(null);
+  const [novoMotorista, setNovoMotorista] = useState<Motorista>(initialMotorista);
+  const { motoristas, loading, error, refresh, createMotorista, editMotorista } = useMotoristas();
+
+  const handleShowNewModal = () => {
+    setNovoMotorista(initialMotorista);
+    setShowNewModal(true)
+  };
   const handleCloseNewModal = () => setShowNewModal(false);
 
   const handleShowEditModal = (driver: Motorista) => {
@@ -58,14 +63,13 @@ function Frotas() {
   const handleShowNewVehicleModal = () => setShowNewVehicleModal(true);
   const handleCloseNewVehicleModal = () => setShowNewVehicleModal(false);
 
-  const handleSaveChanges = () => {
-    console.log("Salvando alterações para:", selectedDriver);
-    createMotorista(novoMotorista);
+  const handleSaveChanges = async () => {
+    editMotorista(selectedDriver!);
     handleCloseEditModal();
   };
 
   const handleCreateDriver = () => {
-    
+    createMotorista(novoMotorista);
     handleCloseNewModal();
   };
 
@@ -80,15 +84,26 @@ function Frotas() {
   }
 
   function handleChange(
-    e: React.ChangeEvent<HTMLInputElement>
+    e: React.ChangeEvent<any>
   ) {
     const { name, value } = e.target;
 
-    setNovoMotorista(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    if (selectedDriver != null) {
+      setSelectedDriver(prev => ({
+        ...prev!,
+        [name]: value
+      }));
+    } else {
+      setNovoMotorista(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
   }
+
+  useEffect(() => {
+    console.log(selectedDriver)
+  }, [selectedDriver])
 
   return (
     <div className={styles.driversPage}>
@@ -140,7 +155,7 @@ function Frotas() {
                         </td>
                         <td>
                           <Badge pill bg={driver.status === 'ativo' ? 'success' : 'secondary'}>
-                            {driver.status}
+                            {driver.status.toUpperCase()}
                           </Badge>
                         </td>
                         <td className="text-center">
@@ -234,7 +249,7 @@ function Frotas() {
                 onChange={handleChange}
               />
             </Form.Group>
-            <Form.Group className="mb-3" controlId="formNewDriverName">
+            <Form.Group className="mb-3" controlId="formNewDriverPassword">
               <Form.Label>Senha</Form.Label>
               <Form.Control 
                 type="password" 
@@ -261,17 +276,28 @@ function Frotas() {
             <Form>
               <Form.Group className="mb-3" controlId="formEditDriverName">
                 <Form.Label>Nome Completo</Form.Label>
-                <Form.Control type="text" defaultValue={selectedDriver.nomeCompleto} autoFocus />
+                <Form.Control 
+                  type="text"
+                  name='nomeCompleto' 
+                  value={selectedDriver.nomeCompleto} 
+                  onChange={handleChange}
+                  autoFocus 
+                />
               </Form.Group>
               <Form.Group className="mb-3" controlId="formEditDriverCNH">
                 <Form.Label>CNH</Form.Label>
-                <Form.Control type="text" defaultValue={selectedDriver.cnh} />
+                <Form.Control 
+                  type="text"
+                  name='cnh' 
+                  onChange={handleChange} 
+                  value={selectedDriver.cnh} 
+                />
               </Form.Group>
               <Form.Group className="mb-3" controlId="formEditDriverStatus">
                 <Form.Label>Status</Form.Label>
-                <Form.Select defaultValue={selectedDriver.status}>
-                  <option>Ativo</option>
-                  <option>Inativo</option>
+                <Form.Select value={selectedDriver.status}>
+                  <option value={"ativo"}>Ativo</option>
+                  <option value={"inativo"}>Inativo</option>
                 </Form.Select>
               </Form.Group>
             </Form>

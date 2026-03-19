@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { createMotoristaService, getMotoristas } from '../services/motoristaService';
+import { postMotoristaService, getMotoristas, putMotoristaService } from '../services/motoristaService';
 import type { Motorista } from '../types/motorista';
 
 export function useMotoristas() {
@@ -20,17 +20,26 @@ export function useMotoristas() {
   }
 
   async function createMotorista(motorista: Motorista) {
-  try {
-    await createMotoristaService(motorista);
-    await fetchMotoristas();
-  } catch {
-    setError('Erro ao criar motorista');
+    try {
+      await postMotoristaService(motorista);
+      await fetchMotoristas();
+    } catch {
+      setError('Erro ao criar motorista');
+    }
   }
-}
+
+  async function editMotorista(motorista: Motorista) {
+    try {
+      await putMotoristaService(motorista);
+      await fetchMotoristas();
+    } catch {
+      setError('Erro ao criar motorista');
+    }
+  }
     
   useEffect(() => {
     fetchMotoristas();
   }, []);
 
-  return { motoristas, loading, error, refresh: fetchMotoristas, createMotorista };
+  return { motoristas, loading, error, refresh: fetchMotoristas, createMotorista, editMotorista };
 }
