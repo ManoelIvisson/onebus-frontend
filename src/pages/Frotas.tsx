@@ -7,15 +7,8 @@ import styles from './Frotas.module.css';
 import CardStatus from '../components/CardStatus';
 import type { Motorista } from '../types/motorista';
 import { useMotoristas } from '../hooks/useMotoristas';
-import { putMotoristaService } from '../services/motoristaService';
-
-const mockVehicles = [
-  { plate: 'ONB-001', name: 'Ônibus 01', type: 'Ônibus', driverId: 1, status: 'Em Rota' },
-  { plate: 'ONB-002', name: 'Ônibus 02', type: 'Ônibus', driverId: 2, status: 'Parado' },
-  { plate: 'ONB-003', name: 'Ônibus 03', type: 'Ônibus', driverId: 3, status: 'Em Rota' },
-  { plate: 'VAN-001', name: 'Van 01', type: 'Van', driverId: 5, status: 'Manutenção' },
-  { plate: 'VAN-002', name: 'Van 02', type: 'Van', driverId: null, status: 'Disponível' },
-];
+import { useVeiculos } from '../hooks/useVeiculos';
+import type { Veiculo } from '../types/veiculo';
 
 function Frotas() {
   //const activeDrivers = mockDrivers.filter(d => d.status === 'Ativo').length;
@@ -25,7 +18,18 @@ function Frotas() {
     cnh: "",
     cpf: "",
     senha: "",
-    status: "ativo"
+    status: "ativo",
+    veiculoId: 0
+  };
+
+  const initialVeiculo: Veiculo = {
+    id: 0,
+    modelo: "",
+    tipo: "",
+    placa: "",
+    status: "ativo",
+    position: null,
+    macEmbarcado: ""
   };
 
   const [showNewModal, setShowNewModal] = useState(false);
@@ -34,7 +38,9 @@ function Frotas() {
   const [showNewVehicleModal, setShowNewVehicleModal] = useState(false);
   const [selectedDriver, setSelectedDriver] = useState<Motorista | null>(null);
   const [novoMotorista, setNovoMotorista] = useState<Motorista>(initialMotorista);
-  const { motoristas, loading, error, refresh, createMotorista, editMotorista } = useMotoristas();
+  const [novoVeiculo, setNovoVeiculo] = useState<Veiculo>(initialVeiculo);
+  const { motoristas, createMotorista, editMotorista } = useMotoristas();
+  const { veiculos, createVeiculo } = useVeiculos();
 
   const handleShowNewModal = () => {
     setNovoMotorista(initialMotorista);
@@ -79,14 +85,15 @@ function Frotas() {
   };
 
   const handleCreateVehicle = () => {
-    console.log("Criando novo veículo...");
+    createVeiculo(novoVeiculo);
     handleCloseNewVehicleModal();
   }
 
-  function handleChange(
+  function handleChangeMotorista(
     e: React.ChangeEvent<any>
   ) {
     const { name, value } = e.target;
+    console.log(name, value)
 
     if (selectedDriver != null) {
       setSelectedDriver(prev => ({
@@ -100,6 +107,17 @@ function Frotas() {
       }));
     }
   }
+
+  function handleChangeVeiculo(
+    e: React.ChangeEvent<any>
+  ) {
+    const { name, value } = e.target;
+    setNovoVeiculo(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  }
+  
 
   useEffect(() => {
     console.log(selectedDriver)
@@ -116,7 +134,7 @@ function Frotas() {
         <Row className="g-4 mb-4">
           <Col xl={4}><CardStatus icone={'fa-users'} titulo="Total de Motoristas" valor={motoristas.length} cor="total" /></Col>
           {/*<Col xl={4}><CardStatus icone={'fa-user-check'} titulo="Motoristas Ativos" valor={activeDrivers} cor="online" /></Col>*/}
-          <Col xl={4}><CardStatus icone="fa-bus-side" titulo="Total de Veículos" valor={mockVehicles.length} cor="vehicles" /></Col>
+          <Col xl={4}><CardStatus icone="fa-bus-side" titulo="Total de Veículos" valor={veiculos.length} cor="vehicles" /></Col>
         </Row>
 
         <Row>
@@ -193,14 +211,14 @@ function Frotas() {
                     </tr>
                   </thead>
                   <tbody>
-                    {mockVehicles.map(vehicle => (
-                      <tr key={vehicle.plate}>
-                        <td><b>{vehicle.plate}</b></td>
+                    {veiculos.map(veiculo => (
+                      <tr key={veiculo.placa}>
+                        <td><b>{veiculo.placa}</b></td>
                         <td>
-                          <Badge pill bg={vehicle.driverId ? 'success' : 'light'} text={vehicle.driverId ? 'white' : 'dark'}>
-                            <FontAwesomeIcon icon={vehicle.driverId ? faCircleCheck : faCircleXmark} className="me-1" />
-                            {vehicle.driverId ? 'Em Uso' : 'Livre'}
-                          </Badge>
+                         {/* * <Badge pill bg={veiculo.driverId ? 'success' : 'light'} text={veiculo.driverId ? 'white' : 'dark'}>
+                            <FontAwesomeIcon icon={veiculo.driverId ? faCircleCheck : faCircleXmark} className="me-1" />
+                            {veiculo.driverId ? 'Em Uso' : 'Livre'}
+                          </Badge> */}
                         </td>
                       </tr>
                     ))}
@@ -226,7 +244,7 @@ function Frotas() {
                 name="nomeCompleto"
                 placeholder="Digite o nome do motorista" 
                 value={novoMotorista?.nomeCompleto} 
-                onChange={handleChange}
+                onChange={handleChangeMotorista}
                 autoFocus />
             </Form.Group>
             <Form.Group className="mb-3" controlId="formNewDriverCpf">
@@ -236,7 +254,7 @@ function Frotas() {
                 name="cpf"
                 placeholder="Digite o cpf" 
                 value={novoMotorista.cpf} 
-                onChange={handleChange}
+                onChange={handleChangeMotorista}
               />
             </Form.Group>
             <Form.Group className="mb-3" controlId="formNewDriverCNH">
@@ -246,7 +264,7 @@ function Frotas() {
                 name="cnh"
                 placeholder="Digite a CNH" 
                 value={novoMotorista.cnh} 
-                onChange={handleChange}
+                onChange={handleChangeMotorista}
               />
             </Form.Group>
             <Form.Group className="mb-3" controlId="formNewDriverPassword">
@@ -256,7 +274,7 @@ function Frotas() {
                 name="senha"
                 placeholder="Digite uma senha" 
                 value={novoMotorista?.senha} 
-                onChange={handleChange}
+                onChange={handleChangeMotorista}
               />
             </Form.Group>
           </Form>
@@ -280,19 +298,38 @@ function Frotas() {
                   type="text"
                   name='nomeCompleto' 
                   value={selectedDriver.nomeCompleto} 
-                  onChange={handleChange}
+                  onChange={handleChangeMotorista}
                   autoFocus 
                 />
               </Form.Group>
-              <Form.Group className="mb-3" controlId="formEditDriverCNH">
-                <Form.Label>CNH</Form.Label>
-                <Form.Control 
-                  type="text"
-                  name='cnh' 
-                  onChange={handleChange} 
-                  value={selectedDriver.cnh} 
-                />
-              </Form.Group>
+              <div className='d-flex justify-content-between'>
+                <Form.Group className="mb-3 col-5" controlId="formEditDriverCNH">
+                  <Form.Label>CNH</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name='cnh'
+                    onChange={handleChangeMotorista}
+                    value={selectedDriver.cnh}
+                  />
+                </Form.Group>
+                <Form.Group className="mb-3 col-6" controlId="formEditDriverVeiculo">
+                  <Form.Label>Vincular veículo</Form.Label>
+                  <Form.Select 
+                    name='veiculoId'
+                    onChange={handleChangeMotorista}
+                    value={selectedDriver.veiculoId ?? ""}   
+                  >
+                    <option value="">Selecionar motorista</option>
+                    {veiculos.map(veiculo => {
+                       console.log("veiculo.id:", veiculo.id);
+                       return (
+                        <option key={veiculo.id} value={veiculo.id}>
+                          fdsfsdfs
+                        </option>
+                    )})}
+                  </Form.Select>
+                </Form.Group>
+              </div>
               <Form.Group className="mb-3" controlId="formEditDriverStatus">
                 <Form.Label>Status</Form.Label>
                 <Form.Select value={selectedDriver.status}>
@@ -334,18 +371,41 @@ function Frotas() {
           <Form>
             <Form.Group className="mb-3" controlId="formNewVehiclePlate">
               <Form.Label>Placa do Veículo</Form.Label>
-              <Form.Control type="text" placeholder="Ex: ABC-1234" autoFocus />
+              <Form.Control 
+                type="text" 
+                name='placa'
+                placeholder="Ex: ABC-1234" 
+                value={novoVeiculo.placa}
+                onChange={handleChangeVeiculo}
+                autoFocus 
+              />
             </Form.Group>
             <Form.Group className="mb-3" controlId="formNewVehicleName">
               <Form.Label>Nome/Modelo do Veículo</Form.Label>
-              <Form.Control type="text" placeholder="Ex: Ônibus 04" />
+              <Form.Control 
+                type="text"   
+                name='modelo'
+                placeholder="Ex: Ônibus 04" 
+                value={novoVeiculo.modelo}
+                onChange={handleChangeVeiculo}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="formNewVehicleMac">
+              <Form.Label>MAC do embarcado</Form.Label>
+              <Form.Control 
+                type="text" 
+                name='macEmbarcado'
+                placeholder="" 
+                value={novoVeiculo.macEmbarcado}
+                onChange={handleChangeVeiculo}
+              />
             </Form.Group>
             <Form.Group className="mb-3" controlId="formNewVehicleType">
               <Form.Label>Tipo</Form.Label>
-              <Form.Select>
-                <option>Ônibus</option>
-                <option>Van</option>
-                <option>Carro</option>
+              <Form.Select name='tipo' value={novoVeiculo.tipo} onChange={handleChangeVeiculo}>
+                <option value={"Ônibus"}>Ônibus</option>
+                <option value={"Van"}>Van</option>
+                <option value={"Carro"}>Carro</option>
               </Form.Select>
             </Form.Group>
           </Form>

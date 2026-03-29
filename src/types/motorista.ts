@@ -4,5 +4,6 @@ export interface Motorista {
   cnh: string,
   cpf: string,
   senha: string,
-  status: 'ativo' | 'inativo'
+  status: 'ativo' | 'inativo',
+  veiculoId: number | null
 }
