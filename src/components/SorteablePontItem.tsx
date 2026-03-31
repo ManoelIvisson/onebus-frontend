@@ -2,7 +2,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { ListGroup, Button, Badge } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMapMarkerAlt, faDotCircle, faTimes, faGripVertical } from '@fortawesome/free-solid-svg-icons';
+import { faTimes, faGripVertical } from '@fortawesome/free-solid-svg-icons';
 import styles from '../pages/Rotas.module.css'; // Reutilizando os estilos
 import type { PontoTrajeto } from '../types/pontoTrajeto';
 

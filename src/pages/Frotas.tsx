@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Container, Row, Col, Card, Table, Button, Badge, Form, Modal, OverlayTrigger, Tooltip, type FormControlProps } from 'react-bootstrap';
-import { faTruck, faSearch, faEdit, faTrashAlt, faPlus, faCircleCheck, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
+import { Container, Row, Col, Card, Table, Button, Badge, Form, Modal, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { faTruck, faSearch, faEdit, faTrashAlt, faPlus } from '@fortawesome/free-solid-svg-icons';
 
 import styles from './Frotas.module.css';
 import CardStatus from '../components/CardStatus';

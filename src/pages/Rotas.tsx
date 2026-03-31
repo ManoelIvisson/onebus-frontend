@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Button, Form, ListGroup, Badge } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Form, ListGroup } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faRoute, faPlus, faEdit, faTrashAlt, faMapMarkerAlt, faDotCircle, faTimes, faSave, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faEdit, faTrashAlt, faMapMarkerAlt, faDotCircle, faSave, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from 'react-leaflet';
 import L, { LatLng } from 'leaflet';
 
@@ -17,11 +17,11 @@ import type { PontoTrajeto } from '../types/pontoTrajeto';
 import type { Trajeto } from '../types/trajeto';
 
 // --- Ícones Customizados para o Mapa ---
-const stopIcon = new L.Icon({
+/* const stopIcon = new L.Icon({
   iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
   iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
-});
+}); */
 const streetIcon = new L.Icon({
   iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png',
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
@@ -45,14 +45,14 @@ const ChangeMapView = ({ pontos }: {pontos: PontoTrajeto[]}) => {
 }
 
 function Rotas() {
-    const initialTrajeto: Trajeto = {
-        id: 0,
-        nome: "",
-        pontos: [],
-        horarioInicio: "",
-        horarioFinal: ""
-    }
-  const [rotas, setRotas] = useState<Trajeto[]>([]);
+  const initialTrajeto: Trajeto = {
+    id: 0,
+    nome: "",
+    pontos: [],
+    horarioInicio: "",
+    horarioFinal: ""
+  }
+  const [rotas] = useState<Trajeto[]>([]);
   const [selectedRoute, setSelectedRoute] = useState<Trajeto | null>(null);
   const [editingRoute, setEditingRoute] = useState<Trajeto | null>(null);
   const [pointType, setPointType] = useState('stop');
@@ -69,13 +69,13 @@ function Rotas() {
   const handleStartNewRoute = () => { setSelectedRoute(null); setEditingRoute(initialTrajeto); };
   const handleEditRoute = (rota: Trajeto) => { setSelectedRoute(rota); setEditingRoute({ ...rota }); };
   const handleCancel = () => { setEditingRoute(initialTrajeto); setSelectedRoute(rotas[0] || null); };
-    const handleFormChange = (e: React.ChangeEvent<any>) => { 
-        const { name, value } = e.target; 
-        setEditingRoute(prev => ({ 
-            ...prev!, 
-            [name]: value 
-        })); 
-    };
+  const handleFormChange = (e: React.ChangeEvent<any>) => { 
+  const { name, value } = e.target; 
+    setEditingRoute(prev => ({ 
+      ...prev!, 
+      [name]: value 
+    })); 
+  };
 
 
   const handleMapClick = (latlng: LatLng) => {
@@ -175,7 +175,7 @@ function Rotas() {
               <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" attribution='&copy; OpenStreetMap' />
               <MapEvents onMapClick={handleMapClick} isEditing={!!editingRoute} />
               <RoutingMachine pontos={pointsOnMap} isEditing={!!editingRoute} />
-              {pointsOnMap.map((ponto, index) => (
+              {pointsOnMap.map((ponto) => (
                 <Marker key={ponto.id} position={[ponto.latitude, ponto.longitude]} icon={streetIcon}  />
               ))}
               <ChangeMapView pontos={pointsOnMap} />
