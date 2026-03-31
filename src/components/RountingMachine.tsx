@@ -24,7 +24,7 @@ const RoutingMachine = ({ pontos, isEditing }: { pontos: PontoTrajeto[], isEditi
             });
 
         const data = await response.json();
-
+        console.log(data)
 
         const geometry = data.routes[0].geometry;
 
