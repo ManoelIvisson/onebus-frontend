@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import L from 'leaflet';
 import { useMap } from 'react-leaflet';
 import type { PontoTrajeto } from '../types/pontoTrajeto';
+import api from '../api/api';
 
 const RoutingMachine = ({ pontos, isEditing }: { pontos: PontoTrajeto[], isEditing: boolean }) => {
   const map = useMap();
@@ -13,17 +14,11 @@ const RoutingMachine = ({ pontos, isEditing }: { pontos: PontoTrajeto[], isEditi
 
     const getRoute = async () => {
       try {
-        const response = await fetch("http://localhost:5000/route", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                coordinates: pontos.map(p => [p.longitude, p.latitude])
-            })
-            });
+        const response = await api.post("/route", {
+            coordinates: pontos.map(p => [p.longitude, p.latitude])
+          });
 
-        const data = await response.json();
+        const data = await response.data;
         console.log(data)
 
         const geometry = data.routes[0].geometry;
