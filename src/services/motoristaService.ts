@@ -17,3 +17,7 @@ export async function putMotoristaService(motorista: Motorista): Promise<Motoris
 
   return response.data.data;
 }
+
+export async function deleteMotoristaService(motoristaId: number): Promise<void> {
+  await api.delete(`/motorista/${motoristaId}`)
+}

@@ -68,7 +68,7 @@ function Rotas() {
   const handleSelectRoute = (rota: Trajeto) => { setSelectedRoute(rota); setEditingRoute(initialTrajeto); };
   const handleStartNewRoute = () => { setSelectedRoute(null); setEditingRoute(initialTrajeto); };
   const handleEditRoute = (rota: Trajeto) => { setSelectedRoute(rota); setEditingRoute({ ...rota }); };
-  const handleCancel = () => { setEditingRoute(initialTrajeto); setSelectedRoute(rotas[0] || null); };
+  const handleCancel = () => { setEditingRoute(null); setSelectedRoute(rotas[0] || null); };
   const handleFormChange = (e: React.ChangeEvent<any>) => { 
   const { name, value } = e.target; 
     setEditingRoute(prev => ({ 

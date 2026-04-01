@@ -39,7 +39,7 @@ function Frotas() {
   const [selectedDriver, setSelectedDriver] = useState<Motorista | null>(null);
   const [novoMotorista, setNovoMotorista] = useState<Motorista>(initialMotorista);
   const [novoVeiculo, setNovoVeiculo] = useState<Veiculo>(initialVeiculo);
-  const { motoristas, createMotorista, editMotorista } = useMotoristas();
+  const { motoristas, createMotorista, editMotorista, deleteMotorista } = useMotoristas();
   const { veiculos, createVeiculo } = useVeiculos();
 
   const handleShowNewModal = () => {
@@ -80,7 +80,7 @@ function Frotas() {
   };
 
   const handleDeleteDriver = () => {
-    console.log("Deletando motorista:", selectedDriver);
+    deleteMotorista(selectedDriver?.id!);
     handleCloseDeleteModal();
   };
 
