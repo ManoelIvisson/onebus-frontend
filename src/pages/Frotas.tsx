@@ -126,7 +126,7 @@ function Frotas() {
 
   return (
     <div className={styles.driversPage}>
-      <Button onClick={async () => await axios.post("https://onebus-backend.onrender.com/viagem", {
+      <Button onClick={async () => await axios.post("https://onebus-backend.onrender.com/api/v1/viagem", {
         "horario_inicio": new Date().toTimeString().slice(0,5),
         "veiculo_id": 1 
       })}>Viagem</Button>
