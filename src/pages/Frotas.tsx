@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Container, Row, Col, Card, Table, Button, Badge, Form, Modal, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { Container, Row, Col, Card, Table, Button, Badge, Form, Modal} from 'react-bootstrap';
 import { faTruck, faSearch, faEdit, faTrashAlt, faPlus } from '@fortawesome/free-solid-svg-icons';
 
 import styles from './Frotas.module.css';
@@ -9,6 +9,7 @@ import type { Motorista } from '../types/motorista';
 import { useMotoristas } from '../hooks/useMotoristas';
 import { useVeiculos } from '../hooks/useVeiculos';
 import type { Veiculo } from '../types/veiculo';
+import axios from 'axios';
 
 function Frotas() {
   //const activeDrivers = mockDrivers.filter(d => d.status === 'Ativo').length;
@@ -48,8 +49,8 @@ function Frotas() {
   };
   const handleCloseNewModal = () => setShowNewModal(false);
 
-  const handleShowEditModal = (driver: Motorista) => {
-    setSelectedDriver(driver);
+  const handleShowEditModal = (motorista: Motorista) => {
+    setSelectedDriver(motorista);
     setShowEditModal(true);
   };
   const handleCloseEditModal = () => {
@@ -57,8 +58,8 @@ function Frotas() {
     setSelectedDriver(null);
   };
 
-  const handleShowDeleteModal = (driver: Motorista) => {
-    setSelectedDriver(driver);
+  const handleShowDeleteModal = (motorista: Motorista) => {
+    setSelectedDriver(motorista);
     setShowDeleteModal(true);
   };
   const handleCloseDeleteModal = () => {
@@ -125,6 +126,10 @@ function Frotas() {
 
   return (
     <div className={styles.driversPage}>
+      <Button onClick={async () => await axios.post("https://onebus-backend.onrender.com/viagem", {
+        "horario_inicio": new Date().toTimeString().slice(0,5),
+        "veiculo_id": 1 
+      })}>Viagem</Button>
       <Container fluid>
         <header className={styles.pageHeader}>
           <h1 className={styles.pageTitle}>Motoristas e Frota</h1>
@@ -161,9 +166,9 @@ function Frotas() {
                     </tr>
                   </thead>
                   <tbody>
-                    {motoristas.map(driver => (
-                      <tr key={driver.id}>
-                        <td><b>{driver.nomeCompleto}</b><br /><small className="text-muted">CNH: {driver.cnh}</small></td>
+                    {motoristas.map(motorista => (
+                      <tr key={motorista.id}>
+                        <td><b>{motorista.nomeCompleto}</b><br /><small className="text-muted">CNH: {motorista.cnh}</small></td>
                         <td>
                           Placa do veiculo
                           {/*{driver.vehiclePlate
@@ -172,21 +177,17 @@ function Frotas() {
                           }*/}
                         </td>
                         <td>
-                          <Badge pill bg={driver.status === 'ativo' ? 'success' : 'secondary'}>
-                            {driver.status.toUpperCase()}
+                          <Badge pill bg={motorista.status === 'ativo' ? 'success' : 'secondary'}>
+                            {motorista.status.toUpperCase()}
                           </Badge>
                         </td>
                         <td className="text-center">
-                          <OverlayTrigger overlay={<Tooltip>Editar</Tooltip>}>
-                            <Button variant="light" className={`${styles.actionButton} ${styles.actionButtonEdit}`} onClick={() => handleShowEditModal(driver)}>
-                              <FontAwesomeIcon icon={faEdit} />
-                            </Button>
-                          </OverlayTrigger>
-                          <OverlayTrigger overlay={<Tooltip>Excluir</Tooltip>}>
-                            <Button variant="light" className={`${styles.actionButton} ${styles.actionButtonDelete}`} onClick={() => handleShowDeleteModal(driver)}>
-                              <FontAwesomeIcon icon={faTrashAlt} />
-                            </Button>
-                          </OverlayTrigger>
+                          <Button variant="light" className={`${styles.actionButton} ${styles.actionButtonEdit}`} onClick={() => handleShowEditModal(motorista)}>
+                            <FontAwesomeIcon icon={faEdit} />
+                          </Button>
+                          <Button variant="light" className={`${styles.actionButton} ${styles.actionButtonDelete}`} onClick={() => handleShowDeleteModal(motorista)}>
+                            <FontAwesomeIcon icon={faTrashAlt} />
+                          </Button>
                         </td>
                       </tr>
                     ))}
@@ -208,6 +209,7 @@ function Frotas() {
                     <tr>
                       <th>Veículo</th>
                       <th>Status</th>
+                      <th>Ações</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -219,6 +221,11 @@ function Frotas() {
                             <FontAwesomeIcon icon={veiculo.driverId ? faCircleCheck : faCircleXmark} className="me-1" />
                             {veiculo.driverId ? 'Em Uso' : 'Livre'}
                           </Badge> */}
+                        </td>
+                        <td>
+                           <Button variant="light" className={`${styles.actionButton} ${styles.actionButtonEdit}`} disabled>
+                              <FontAwesomeIcon icon={faEdit} />
+                            </Button>
                         </td>
                       </tr>
                     ))}
@@ -321,10 +328,9 @@ function Frotas() {
                   >
                     <option value="">Selecionar motorista</option>
                     {veiculos.map(veiculo => {
-                       console.log("veiculo.id:", veiculo.id);
                        return (
                         <option key={veiculo.id} value={veiculo.id}>
-                          fdsfsdfs
+                          {veiculo.modelo}
                         </option>
                     )})}
                   </Form.Select>
